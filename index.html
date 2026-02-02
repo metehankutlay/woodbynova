@@ -497,7 +497,7 @@
         }
 
         .option-btn {
-            padding: 2rem 1.5rem;
+            padding: 1.2rem 1rem;
             background: 
                 linear-gradient(135deg, #fefefe, #f9f6f0),
                 repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(139, 69, 19, 0.02) 10px, rgba(139, 69, 19, 0.02) 11px);
@@ -506,7 +506,7 @@
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             text-align: center;
-            font-size: 1.1rem;
+            font-size: 0.95rem;
             color: #5a3e2b;
             font-family: 'Georgia', serif;
             position: relative;
@@ -542,9 +542,9 @@
         }
 
         .option-emoji {
-            font-size: 3rem;
+            font-size: 2rem;
             display: block;
-            margin-bottom: 0.8rem;
+            margin-bottom: 0.5rem;
             filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.2));
         }
 
@@ -1289,7 +1289,9 @@
         <div class="tree-rings" style="bottom: 10%; right: -100px; opacity: 0.3;"></div>
         
         <div class="hero-content">
-            <img src="logo.png" alt="Wood by Nova Logo" style="max-width: 400px; width: 100%; height: auto; margin-bottom: 2rem; filter: drop-shadow(3px 3px 6px rgba(0,0,0,0.4));">
+            <div style="max-width: 420px; width: 100%; margin: 0 auto 2rem; padding: 1.5rem; background: rgba(255, 255, 255, 0.15); border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.2);">
+                <img src="logo.png" alt="Wood by Nova Logo" style="max-width: 100%; width: 100%; height: auto; display: block; filter: drop-shadow(3px 3px 6px rgba(0,0,0,0.4));">
+            </div>
             <p class="subtitle">From Anatolia's Ancient Forests to Your Home</p>
             <p class="tagline">Each piece carries the soul of a tree that lived, breathed, and waited for you</p>
             
@@ -1745,11 +1747,11 @@
 
                 body.innerHTML = `
                     <div class="question-card">
-                        <div style="text-align: center; margin-bottom: 2rem;">
-                            <img src="${question.image}" alt="Nature scene" style="width: 100%; max-width: 600px; height: 400px; object-fit: cover; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+                        <div style="text-align: center; margin-bottom: 1.5rem;">
+                            <img src="${question.image}" alt="Nature scene" style="width: 100%; max-width: 300px; height: 200px; object-fit: cover; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.25);">
                         </div>
-                        <h3 class="question-title">${question.question}</h3>
-                        <div class="options-grid">
+                        <h3 class="question-title" style="font-size: 1.6rem; margin-bottom: 1.5rem;">${question.question}</h3>
+                        <div class="options-grid" style="gap: 1rem;">
                             ${optionsHTML}
                         </div>
                     </div>
