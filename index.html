@@ -988,11 +988,12 @@
         }
 
         .product-title {
-            font-size: 1.6rem;
+            font-size: 1.2rem;
             color: #5a3e2b;
-            margin-bottom: 1.2rem;
-            min-height: 65px;
+            margin-bottom: 1rem;
+            min-height: 50px;
             font-weight: 600;
+            line-height: 1.4;
         }
 
         .product-price {
@@ -1019,13 +1020,14 @@
 
         .product-link {
             display: inline-block;
-            padding: 1.2rem 2.5rem;
+            padding: 1rem 2rem;
             background: linear-gradient(135deg, #5a3e2b 0%, #7d5a3f 100%);
             color: white;
             text-decoration: none;
             border-radius: 50px;
             transition: all 0.4s ease;
             font-weight: 600;
+            font-size: 0.95rem;
             box-shadow: 0 8px 20px rgba(92, 62, 43, 0.3);
         }
 
@@ -1615,13 +1617,18 @@
             {
                 id: 15,
                 question: "What matters most to you?",
-                type: "final",
                 options: [
                     { emoji: "🌍", text: "Sustainability and ethics", value: "sustainability" },
                     { emoji: "🎨", text: "Unique, one-of-a-kind pieces", value: "unique" },
                     { emoji: "💪", text: "Quality that lasts forever", value: "quality" },
                     { emoji: "❤️", text: "The story and craftsmanship", value: "story" }
                 ]
+            },
+            {
+                id: 16,
+                question: "Would you like to receive letters from nature?",
+                type: "email",
+                subtitle: "Optional - Leave your email to stay connected"
             }
         ];
 
@@ -1701,7 +1708,6 @@
             if (currentQuestion > 0) {
                 currentQuestion--;
                 loadQuestion(currentQuestion);
-                updateBackButton();
             }
         }
 
@@ -1756,26 +1762,22 @@
                         </div>
                     </div>
                 `;
-            } else if (question.type === 'final') {
-                const optionsHTML = question.options.map(opt => `
-                    <button class="option-btn" onclick="selectAnswer(${index}, '${opt.value}')">
-                        <span class="option-emoji">${opt.emoji}</span>
-                        ${opt.text}
-                    </button>
-                `).join('');
-
+            } else if (question.type === 'email') {
                 body.innerHTML = `
                     <div class="question-card">
                         <h3 class="question-title">${question.question}</h3>
-                        <div class="options-grid">
-                            ${optionsHTML}
-                        </div>
-                        <div class="email-section" style="background: linear-gradient(135deg, #f9f6f0, #e8dfc8); padding: 2rem; border-radius: 15px; margin-top: 2rem; text-align: center;">
-                            <p style="font-size: 1.2rem; color: #5a3e2b; margin-bottom: 1.5rem; line-height: 1.8;">🍃 <strong>Doğadan mektuplar almak ister misiniz?</strong><br><span style="font-size: 1rem; opacity: 0.85;">İsteğe bağlı olarak mail adresinizi paylaşabilirsiniz</span></p>
-                            <input type="email" class="email-input" id="emailInput" placeholder="ornek@email.com (isteğe bağlı)" style="margin-bottom: 1rem;">
-                            <button class="skip-btn" onclick="document.getElementById('emailInput').value=''; selectAnswer(14, answers['q15'] || '');" style="background: transparent; border: 2px solid #8B6F47; color: #5a3e2b; padding: 0.8rem 2rem; border-radius: 30px; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; display: block; margin: 0 auto;">
-                                Geç
-                            </button>
+                        <p style="font-size: 1.2rem; color: #5a3e2b; text-align: center; margin-bottom: 2rem; opacity: 0.85;">${question.subtitle}</p>
+                        <div class="email-section" style="background: linear-gradient(135deg, #f9f6f0, #e8dfc8); padding: 2.5rem; border-radius: 15px; text-align: center; border: 2px solid rgba(139, 111, 71, 0.2);">
+                            <p style="font-size: 1.3rem; color: #5a3e2b; margin-bottom: 1.5rem; line-height: 1.8;">🍃 <strong>Stay connected with nature</strong></p>
+                            <input type="email" class="email-input" id="emailInput" placeholder="your@email.com (optional)" style="margin-bottom: 1.5rem; width: 100%; max-width: 400px;">
+                            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                                <button class="option-btn" onclick="selectEmail()" style="max-width: 200px; padding: 1rem 2rem;">
+                                    Continue →
+                                </button>
+                                <button class="skip-btn" onclick="skipEmail()" style="background: transparent; border: 2px solid #8B6F47; color: #5a3e2b; padding: 1rem 2rem; border-radius: 30px; font-size: 1rem; cursor: pointer; transition: all 0.3s ease;">
+                                    Skip
+                                </button>
+                            </div>
                         </div>
                     </div>
                 `;
@@ -1796,6 +1798,9 @@
                     </div>
                 `;
             }
+            
+            // Her soru yüklendiğinde back butonunu güncelle
+            updateBackButton();
         }
 
         function filterCountries(search) {
@@ -1822,7 +1827,6 @@
                 answers['distance'] = distance;
                 setTimeout(() => nextQuestion(), 500);
             }
-                    updateBackButton();
         }
 
         function selectAnswer(questionIndex, value) {
@@ -1837,18 +1841,20 @@
             document.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('selected'));
             event.target.closest('.option-btn').classList.add('selected');
             
-            if (question.type === 'final') {
-                setTimeout(() => {
-                    const email = document.getElementById('emailInput')?.value;
-                    if (email) {
-                        userEmail = email;
-                        sendToAnalytics();
-                    }
-                    nextQuestion();
-                }, 800);
-            } else {
-                setTimeout(() => nextQuestion(), 600);
+            setTimeout(() => nextQuestion(), 600);
+        }
+
+        function selectEmail() {
+            const email = document.getElementById('emailInput')?.value;
+            if (email && email.includes('@')) {
+                userEmail = email;
+                sendToAnalytics();
             }
+            nextQuestion();
+        }
+
+        function skipEmail() {
+            nextQuestion();
         }
 
         function nextQuestion() {
@@ -1952,7 +1958,7 @@
                         <img src="${p.image}" alt="${p.title}" class="product-image">
                     </div>
                     <div class="product-info">
-                        <h3 class="product-title">${p.title}</h3>
+                        <h3 class="product-title" style="font-size: 0.9rem; min-height: 40px;">${p.title}</h3>
                         <a href="${p.url}" target="_blank" class="product-link">View on Etsy →</a>
                     </div>
                 </div>
